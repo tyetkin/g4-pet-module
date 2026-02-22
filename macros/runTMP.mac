@@ -9,5 +9,5 @@
 /gps/pos/type Beam
 /gps/pos/shape Circle
 /gps/pos/sigma_r 0.0 cm
-/gps/pos/centre XPOS YPOS 2. cm
+/gps/pos/centre XPOS YPOS 22. mm
 /run/beamOn 10

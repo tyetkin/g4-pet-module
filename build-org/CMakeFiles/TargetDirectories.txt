@@ -1,0 +1,7 @@
+/Users/tyetkin/Work/g4-phodet-array/build/CMakeFiles/myApp.dir
+/Users/tyetkin/Work/g4-phodet-array/build/CMakeFiles/edit_cache.dir
+/Users/tyetkin/Work/g4-phodet-array/build/CMakeFiles/rebuild_cache.dir
+/Users/tyetkin/Work/g4-phodet-array/build/CMakeFiles/list_install_components.dir
+/Users/tyetkin/Work/g4-phodet-array/build/CMakeFiles/install.dir
+/Users/tyetkin/Work/g4-phodet-array/build/CMakeFiles/install/local.dir
+/Users/tyetkin/Work/g4-phodet-array/build/CMakeFiles/install/strip.dir

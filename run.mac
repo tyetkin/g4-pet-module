@@ -1,0 +1,13 @@
+#/control/verbose 0
+#/run/verbose 0
+#/event/verbose 0
+#/tracking/verbose 1
+/detector/coating R
+/gps/energy 511.00 keV
+/gps/particle gamma
+/gps/direction 0. 0. -1.
+/gps/pos/type Beam
+/gps/pos/shape Circle
+/gps/pos/sigma_r 0.0 cm
+/gps/pos/centre 0. 0. 2. cm
+/run/beamOn 1

@@ -1,8 +1,0 @@
-/gps/energy 140.00 keV
-/gps/particle gamma
-/gps/direction 0. 0. -1.
-/gps/pos/type Beam
-/gps/pos/shape Circle
-/gps/pos/sigma_r 0.042 cm
-/gps/pos/centre 0. 0. 5. cm
-/run/beamOn 1

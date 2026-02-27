@@ -4,8 +4,7 @@
 #include "globals.hh"
 #include "PhotonDetSD.hh"
 #include "PrimDetSD.hh"
-//#include "XtalBGOSD.hh"
-//#include "XtalGAGGSD.hh"
+#include "XtalSD.hh"
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -27,10 +26,7 @@ class AnalysisManager{
    
    void FillTree(int evtNo, PhotonDetHitsCollection* phc);
    void FillPrimDetTree(int evtNo, PrimDetHitsCollection* pdhc);
-  //  void FillPrimGenTree(float posX, float posY, float posZ, float energy);
-   
-   //void AddEventXtalBGO(vector<float> ene, vector<float> enesp, vector<float> gtime);
-   //void AddEventXtalGAGG(vector<float> ene, vector<float> enesp, vector<float> gtime);
+   void FillXtalTree(int evtNo, XtalHitsCollection* xtalc);
 
    void CloseFile(); 
  
@@ -40,13 +36,9 @@ class AnalysisManager{
    static AnalysisManager* instance;
    TFile* fFile;   
    TTree* fTree;
-   //tree to hold info from thin foil before detector.
    TTree* fPrimDetTree;
-   //tree to hold info from primary generator action.
-  //  TTree* fPrimGenTree;
-   //TTree* fXtalBGOTree;
-   //TTree* fXtalGAGGTree;
-   static const int MAX_PHOT = 20000;
+   TTree* fXtalTree;
+   static const int MAX_PHOT = 50000;
    
    int fNumPhot;
    float fWavelength[MAX_PHOT];
@@ -56,10 +48,6 @@ class AnalysisManager{
    float fHitPosX[MAX_PHOT];
    float fHitPosY[MAX_PHOT];
    
-  //  float fPrimGenPosX;
-  //  float fPrimGenPosY;
-  //  float fPrimGenPosZ;
-  //  float fPrimGenEn;
    
    int fNumPrim;
    float fPrimDetTime[MAX_PHOT];
@@ -67,25 +55,13 @@ class AnalysisManager{
    float fPrimDetPosY[MAX_PHOT];
    float fPrimDetPosZ[MAX_PHOT];
    float fPrimDetEn[MAX_PHOT];
-   /*
-   float fXtalBGOEdep;
-   float fXtalGAGGEdep;
-   int fNumXtalBGOHit;
-   int fXtalBGOId[10];
-   float fEneXtalBGO[10];
-   float fTimeXtalBGO[10];
-   float fEneSpecXtalBGO[10];
-   float fWeightBGO[10];
-   
-   int fNumXtalGAGGHit;
-   int fXtalGAGGId[10];
-   float fEneXtalGAGG[10];
-   float fTimeXtalGAGG[10];
-   float fEneSpecXtalGAGG[10];
-   float fWeightGAGG[10];
-   */
 
-   
+   int fNumXtal;
+   float fXtalTime[MAX_PHOT];
+   float fXtalPosX[MAX_PHOT];
+   float fXtalPosY[MAX_PHOT];
+   float fXtalPosZ[MAX_PHOT];
+   float fXtalEn[MAX_PHOT];
 };
 
 

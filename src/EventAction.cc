@@ -1,6 +1,7 @@
 
 #include "EventAction.hh"
 #include "PhotonDetSD.hh"
+#include "XtalSD.hh"
 #include "AnalysisManager.hh"
 
 #include "G4RunManager.hh"
@@ -23,9 +24,8 @@ EventAction::EventAction(DetectorConstruction* det)
  : G4UserEventAction(),
    fDet(det),
    fPhoDetHCID(-999),
-   fPrimDetHCID(-999)//,
-   //fXtalBGOCollID (-999),
-   //fXtalGAGGCollID (-999)
+   fPrimDetHCID(-999),
+   fXtalHCID(-999)
 {}
 
 
@@ -49,9 +49,8 @@ void EventAction::EndOfEventAction(const G4Event* evt)
   
   PhotonDetHitsCollection* phoDetHC = 0;
   PrimDetHitsCollection* primDetHC = 0;
-  //XtalBGOHitsCollection* xtalBGOHC = 0;  
-  //XtalGAGGHitsCollection* xtalGAGGHC = 0;  
-
+  XtalHitsCollection* xtalHC = 0;
+  
 
   G4String colName = "PhotonDetHitsCollection";
   fPhoDetHCID = SDman->GetCollectionID(colName);
@@ -59,13 +58,10 @@ void EventAction::EndOfEventAction(const G4Event* evt)
   
   colName = "PrimDetHitsCollection";
   fPrimDetHCID = SDman->GetCollectionID(colName);
-  /*
-  colName = "XtalBGOHitsCollection";
-  fXtalBGOCollID = SDman->GetCollectionID(colName);
-  
-  colName = "XtalGAGGHitsCollection";
-  fXtalGAGGCollID = SDman->GetCollectionID(colName);
-  */
+
+  colName = "XtalHitsCollection";
+  fXtalHCID = SDman->GetCollectionID(colName);
+
 
   if (HCE){
     if (fPhoDetHCID>=0){
@@ -77,95 +73,13 @@ void EventAction::EndOfEventAction(const G4Event* evt)
       primDetHC = (PrimDetHitsCollection*)(HCE->GetHC(fPrimDetHCID));
       if (primDetHC)AnalysisManager::getInstance()->FillPrimDetTree(evt->GetEventID(), primDetHC);
     }
-    
-    /*
-    if (fXtalBGOCollID>=0){
-       xtalBGOHC = (XtalBGOHitsCollection*)(HCE->GetHC(fXtalBGOCollID));
+
+    if (fXtalHCID>=0){
+      xtalHC = (XtalHitsCollection*)(HCE->GetHC(fXtalHCID));
+      if (xtalHC)AnalysisManager::getInstance()->FillXtalTree(evt->GetEventID(), xtalHC);
     }
-    if (fXtalGAGGCollID>=0){
-       xtalGAGGHC = (XtalGAGGHitsCollection*)(HCE->GetHC(fXtalGAGGCollID));
-    }
-    */
-  }
-  /*
-  if (xtalBGOHC){
-    vector<float> fSpec;
-    vector<float> fWeight;
-    vector<float> fEnergy;
-    vector<float> fTime;
-    vector<float> fEnergyS;
-    G4int n_hit = xtalBGOHC->entries();
-    G4cout << "Nb. of XtalBGO Hits " << n_hit << G4endl;   
-    for(G4int iHit=0; iHit<n_hit; iHit++){
-      G4ThreeVector hitPos = (*xtalBGOHC)[iHit]->GetPosition()/cm;
-      G4double zPoz = hitPos.z();
-      G4double edep = (*xtalBGOHC)[iHit]->GetEnergy()/MeV;
-      G4double enSpec = (*xtalBGOHC)[iHit]->GetEnergyS()/MeV;
-      G4double ftime = (*xtalBGOHC)[iHit]->GetTime();
-      //G4int XtalId = (*xtalBGOHC)[iHit]->GetID();
-      //fXtalDetId.push_back(XtalId);
-      fEnergy.push_back(edep);
-      fTime.push_back(ftime);
-      fEnergyS.push_back(enSpec);
-      //vector<float> fSpec_loc = (*xtalBGOHC)[iHit]->GetESpectrum();
-      //vector<float> fWeight_loc = (*xtalBGOHC)[iHit]->GetWeight();
-      //for(G4int kk = 0; kk < G4int(fSpec_loc.size()); kk++){
-        //fSpec.push_back(fSpec_loc[kk]);
-        //fWeight.push_back(fWeight_loc[kk]);
-      //}
-      //G4cout << "size : " << fSpec.size() << G4endl;
-      //G4cout << "edep: " << edep << " z: " << zPoz/cm << G4endl;
-    }
-    if(n_hit > 0){
-      //AnalysisManager::getInstance()->AddEventXtalBGO(fEnergy, fEnergyS, fTime);
-    }
-    fEnergy.clear();
-    fEnergyS.clear();
-    fTime.clear();
-    
-    fSpec.clear();
-    fWeight.clear();
   }
   
-  if (xtalGAGGHC){
-    vector<float> fSpec;
-    vector<float> fWeight;
-    vector<float> fEnergy;
-    vector<float> fTime;
-    vector<float> fEnergyS;
-    G4int n_hit = xtalGAGGHC->entries();
-    G4cout << "Nb. of XtalGAGG Hits " << n_hit << G4endl;   
-    for(G4int iHit=0; iHit<n_hit; iHit++){
-      G4ThreeVector hitPos = (*xtalGAGGHC)[iHit]->GetPosition()/cm;
-      G4double zPoz = hitPos.z();
-      G4double edep = (*xtalGAGGHC)[iHit]->GetEnergy()/MeV;
-      G4double enSpec = (*xtalGAGGHC)[iHit]->GetEnergyS()/MeV;
-      G4double ftime = (*xtalGAGGHC)[iHit]->GetTime();
-      //G4int XtalId = (*xtalGAGGHC)[iHit]->GetID();
-      //fXtalDetId.push_back(XtalId);
-      fEnergy.push_back(edep);
-      fTime.push_back(ftime);
-      fEnergyS.push_back(enSpec);
-      //vector<float> fSpec_loc = (*xtalGAGGHC)[iHit]->GetESpectrum();
-      //vector<float> fWeight_loc = (*xtalGAGGHC)[iHit]->GetWeight();
-      //for(G4int kk = 0; kk < G4int(fSpec_loc.size()); kk++){
-        //fSpec.push_back(fSpec_loc[kk]);
-        //fWeight.push_back(fWeight_loc[kk]);
-      //}
-      //G4cout << "size : " << fSpec.size() << G4endl;
-      //G4cout << "edep: " << edep << " z: " << zPoz/cm << G4endl;
-    }
-    if(n_hit > 0){
-      //AnalysisManager::getInstance()->AddEventXtalGAGG(fEnergy, fEnergyS, fTime);
-    }
-    fEnergy.clear();
-    fEnergyS.clear();
-    fTime.clear();
-    
-    fSpec.clear();
-    fWeight.clear();
-  }
-  */
   Clear();
 }
 

@@ -25,6 +25,7 @@ AnalysisManager::AnalysisManager()
   // event = new Event();
   fNumPhot = 0;
   fNumPrim = 0;
+  fNumXtal = 0;
   for(G4int k = 0; k < MAX_PHOT; k++){
     
     fWavelength[k] = 0.;
@@ -44,6 +45,12 @@ AnalysisManager::AnalysisManager()
     fPrimDetPosZ[k] = 0.;
     
     fPrimDetEn[k] = 0.;
+
+    fXtalTime[k] = 0.;
+    fXtalPosX[k] = 0.;
+    fXtalPosY[k] = 0.;
+    fXtalPosZ[k] = 0.;
+    fXtalEn[k] = 0.;
   }
   // fPrimGenPosX = 0.;
   // fPrimGenPosY = 0.;
@@ -57,6 +64,7 @@ AnalysisManager::~AnalysisManager()
   if (fTree) delete fTree; 
   // if (fPrimGenTree) delete fPrimGenTree; 
   if (fPrimDetTree) delete fPrimDetTree; 
+  if (fXtalTree) delete fXtalTree; 
   if (fFile) delete fFile;
 }
 
@@ -103,27 +111,16 @@ void AnalysisManager::Book(G4String name, G4String activeDetType)
     fPrimDetTree->Branch("PrimDetPosZ",fPrimDetPosZ,"PrimDetPosZ[NumPrim]/F");
     fPrimDetTree->Branch("PrimDetEn",fPrimDetEn,"Energy[NumPrim]/F");
   }
-  
-  /*
-  if (!fXtalBGOTree){
-    fXtalBGOTree = new TTree("xtal_bgo_tree","Global results");
-    fXtalBGOTree->Branch("NXtalBGOHits",&fNumXtalBGOHit,"NXtalBGOHits/I");
-    fXtalBGOTree->Branch("XtalBGODetId",fXtalBGOId,"XtalBGODetId[NXtalBGOHits]/I");
-    fXtalBGOTree->Branch("EnergyBGO",fEneXtalBGO,"EnergyBGO[NXtalBGOHits]/F");
-    fXtalBGOTree->Branch("GlobalTimeXtalBGO",fTimeXtalBGO,"GlobalTimeXtalBGO[NXtalBGOHits]/F");
-    fXtalBGOTree->Branch("EnergySpecBGO",fEneSpecXtalBGO,"EnergySpecBGO[NXtalBGOHits]/F");
-    //fXtalBGOTree->Branch("WeightBGO",fWeightBGO,"WeightBGO[NXtalBGOHits]/F");
+
+  if (!fXtalTree){
+    fXtalTree = new TTree("xtal_tree","Global results");
+    fXtalTree->Branch("NumXtal",&fNumXtal,"NumXtal/I");
+    fXtalTree->Branch("XtalTime",fXtalTime,"XtalTime[NumXtal]/F");
+    fXtalTree->Branch("XtalPosX",fXtalPosX,"XtalPosX[NumXtal]/F");
+    fXtalTree->Branch("XtalPosY",fXtalPosY,"XtalPosY[NumXtal]/F");
+    fXtalTree->Branch("XtalPosZ",fXtalPosZ,"XtalPosZ[NumXtal]/F");
+    fXtalTree->Branch("XtalEn",fXtalEn,"Energy[NumXtal]/F");
   }
-  if (!fXtalGAGGTree){
-    fXtalGAGGTree = new TTree("xtal_gagg_tree","Global results");
-    fXtalGAGGTree->Branch("NXtalGAGGHits",&fNumXtalGAGGHit,"NXtalGAGGHits/I");
-    fXtalGAGGTree->Branch("XtalGAGGDetId",fXtalGAGGId,"XtalGAGGDetId[NXtalGAGGHits]/I");
-    fXtalGAGGTree->Branch("EnergyGAGG",fEneXtalGAGG,"EnergyGAGG[NXtalGAGGHits]/F");
-    fXtalGAGGTree->Branch("GlobalTimeXtalGAGG",fTimeXtalGAGG,"GlobalTimeXtalGAGG[NXtalGAGGHits]/F");
-    fXtalGAGGTree->Branch("EnergySpecGAGG",fEneSpecXtalGAGG,"EnergySpecGAGG[NXtalGAGGHits]/F");
-    //fXtalGAGGTree->Branch("WeightGAGG",fWeightGAGG,"WeightGAGG[NXtalGAGGHits]/F");
-  }
-  */
   return;
 }
 
@@ -187,57 +184,31 @@ void AnalysisManager::FillPrimDetTree(int evtNo, PrimDetHitsCollection* pdhc){
   }
   // G4cout << "Finished filling " << endl;
 }
-/*
-void AnalysisManager::FillPrimGenTree(float posX, float posY, float posZ, float energy){
-  
-  fPrimGenPosX = posX;
-  fPrimGenPosY = posY;
-  fPrimGenPosZ = posZ;
-  fPrimGenEn = energy;
-  fPrimGenTree->Fill();
-  fPrimGenPosX = 0.;
-  fPrimGenPosY = 0.;
-  fPrimGenPosZ = 0.;
-  fPrimGenEn = 0.;
-}
-*/
-/*
-void AnalysisManager::AddEventXtalBGO(vector<float> ene,
-                                   vector<float> enesp, vector<float> gtime)
-                                   //std::vector<float> enesp, std::vector<float> w)
-{
-  G4cout << "AnalysisManager::AddEventXtal started " << endl;
-  //G4AutoLock l(&dataManipulationMutex);
-  fNumXtalBGOHit = (G4int) ene.size();
-  G4cout << "AnalysisManager::AddEventXtalBGO " << fNumXtalBGOHit << " hits " << G4endl;
-  for (G4int i = 0; i < fNumXtalBGOHit; i++){
-      fEneXtalBGO[i] = ene[i];
-      fTimeXtalBGO[i] = gtime[i];
-      fEneSpecXtalBGO[i] = enesp[i];
-  }
-  G4cout << "Filling tree" << endl;
-  fXtalBGOTree->Fill();
-  G4cout << "AnalysisManager::AddEventXtalBGO finished " << endl;
-}
 
-void AnalysisManager::AddEventXtalGAGG(vector<float> ene,
-                                   vector<float> enesp, vector<float> gtime)
-                                   //std::vector<float> enesp, std::vector<float> w)
-{
-  G4cout << "AnalysisManager::AddEventXtalGAGG started " << endl;
-  //G4AutoLock l(&dataManipulationMutex);
-  fNumXtalGAGGHit = (G4int) ene.size();
-  G4cout << "AnalysisManager::AddEventXtalGAGG " << fNumXtalGAGGHit << " hits " << G4endl;
-  for (G4int i = 0; i < fNumXtalGAGGHit; i++){
-      fEneXtalGAGG[i] = ene[i];
-      fTimeXtalGAGG[i] = gtime[i];
-      fEneSpecXtalGAGG[i] = enesp[i];
+void AnalysisManager::FillXtalTree(int evtNo, XtalHitsCollection* xtalc){
+  G4int n_hit = xtalc->entries();
+  G4cout << "Nb. of Xtal Hits " << n_hit << G4endl;
+  // G4cout << "Started filling " << endl;
+  fNumXtal = n_hit;
+  for(G4int iHit=0; iHit<n_hit; iHit++){
+      fXtalTime[iHit] = ((*xtalc)[iHit]->GetTime())/ns;
+      G4ThreeVector pos = ((*xtalc)[iHit]->GetPos());
+      fXtalPosX[iHit] = pos.x()/mm;
+      fXtalPosY[iHit] = pos.y()/mm;
+      fXtalPosZ[iHit] = pos.z()/mm;
+      G4cout << fXtalPosX[iHit] << " " << fXtalPosY[iHit] << G4endl;
+      fXtalEn[iHit] = ((*xtalc)[iHit]->GetEnergy())/keV;
   }
-  G4cout << "Filling tree" << endl;
-  fXtalGAGGTree->Fill();
-  G4cout << "AnalysisManager::AddEventXtalGAGG finished " << endl;
+  if(fNumXtal > 0)fXtalTree->Fill();
+  fNumXtal = 0;
+  for(G4int k = 0; k < MAX_PHOT; k++){
+    fXtalTime[k] = 0.;
+    fXtalPosX[k] = 0.;
+    fXtalPosY[k] = 0.;
+    fXtalPosZ[k] = 0.;
+    fXtalEn[k] = 0.;
+  }
 }
-*/
 
 void AnalysisManager::Clear()
 {
@@ -267,8 +238,6 @@ void AnalysisManager::CloseFile()
   fFile->cd();    
   if (fTree) fTree->Write(fTree->GetName());
   if (fPrimDetTree) fPrimDetTree->Write(fPrimDetTree->GetName());
-  // if (fPrimGenTree) fPrimGenTree->Write(fPrimGenTree->GetName());
-  //if (fXtalBGOTree) fXtalBGOTree->Write(fXtalBGOTree->GetName());
-  //if (fXtalGAGGTree) fXtalGAGGTree->Write(fXtalGAGGTree->GetName());
+  if (fXtalTree) fXtalTree->Write(fXtalTree->GetName());
   fFile->Close();
 }

@@ -26,8 +26,7 @@ private:
   DetectorConstruction* fDet;
   G4int  fPhoDetHCID; 
   G4int  fPrimDetHCID; 
-  //G4int fXtalBGOCollID;
-  //G4int fXtalGAGGCollID;
+  G4int  fXtalHCID;
 
 };
                      

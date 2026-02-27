@@ -4,6 +4,7 @@
 #include "Materials.hh"
 #include "PhotonDetSD.hh"
 #include "PrimDetSD.hh"
+#include "XtalSD.hh"
 #include "SiPM.hh"
 #include "DetectorMessenger.hh"
 
@@ -69,6 +70,7 @@ DetectorConstruction::DetectorConstruction()
   fOpticalGreaseThickness = 0.02*mm;
   fNumPhoDetsX = 8;
   fNumPhoDetsY = 8;
+  fScintZLength = 0*mm;
 }
 
 DetectorConstruction::~DetectorConstruction() {
@@ -113,7 +115,7 @@ G4VPhysicalVolume *DetectorConstruction::ConstructVolumes() {
     
   // scintillator
   G4double ScintZpos = 0.*mm;
-
+  fScintZLength = fXtalSizeZ;
   G4VSolid* fSolidScint = new G4Box("Scintillator", fXtalSizeXY/2., fXtalSizeXY/2., fXtalSizeZ/2.);
   fLogicScint = new G4LogicalVolume(fSolidScint, FindMaterial("LYSOCe"), "Scintillator");
   auto fPhysiScint = new G4PVPlacement(0, G4ThreeVector(0, 0, ScintZpos), fLogicScint, "Scintillator", fLogicWorld, false, 0, fCheckOverlaps);
@@ -322,6 +324,10 @@ void DetectorConstruction::ConstructSDandField() {
   PrimDetSD* primSD = new PrimDetSD("PrimDetSD", "PrimDetHitsCollection");
   G4SDManager::GetSDMpointer()->AddNewDetector(primSD);
   SetSensitiveDetector("PrimaryCounter", primSD);
+
+  XtalSD* xtalSD = new XtalSD("XtalSD", "XtalHitsCollection", fNumPhoDetsX*fNumPhoDetsY, this);
+  G4SDManager::GetSDMpointer()->AddNewDetector(xtalSD);
+  SetSensitiveDetector("Scintillator", xtalSD);
   
   G4SDManager::GetSDMpointer()->ListTree();
 }

@@ -376,19 +376,20 @@ void Materials::CreateMaterials() {
   
   mptLYSOCe->AddProperty("RINDEX", energySmall, refIdxLYSO);
   mptLYSOCe->AddProperty("ABSLENGTH", energySmall, absLYSO);
-  mptLYSOCe->AddConstProperty("SCINTILLATIONYIELD", 29./keV);
+  mptLYSOCe->AddConstProperty("SCINTILLATIONYIELD", 33.2/keV);
   mptLYSOCe->AddConstProperty("RESOLUTIONSCALE", 1.0);
   //https://github.com/OpenGATE/Gate/blob/develop/Materials.xml
   //mptLYSOCe->AddConstProperty("RESOLUTIONSCALE", 4.41);
-  mptLYSOCe->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 0.036*ns);//36ps
-  mptLYSOCe->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 0.036*ns);//36ps
-  mptLYSOCe->AddConstProperty("SCINTILLATIONRISETIME1", 0.5*ns);
-  mptLYSOCe->AddConstProperty("SCINTILLATIONRISETIME2", 0.5*ns);
+  mptLYSOCe->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 40*ns);
+  mptLYSOCe->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 40*ns);
+  mptLYSOCe->AddConstProperty("SCINTILLATIONRISETIME1", 0.1*ns);
+  mptLYSOCe->AddConstProperty("SCINTILLATIONRISETIME2", 0.1*ns);
 
   mptLYSOCe->AddConstProperty("SCINTILLATIONYIELD1", 1.0);
   mptLYSOCe->AddConstProperty("SCINTILLATIONYIELD2", 0.0);
   
   fLYSOCe->SetMaterialPropertiesTable(mptLYSOCe);
+ 
   mptLYSOCe->DumpTable();
 
   

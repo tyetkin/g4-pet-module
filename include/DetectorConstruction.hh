@@ -25,6 +25,7 @@ class DetectorConstruction: public G4VUserDetectorConstruction
 
   	const G4VPhysicalVolume* GetWorld(){return fPhysiWorld;}
     void SetCoatingType(G4String val) { fCoatingType = val; }
+    G4double GetScintZLength() { return fScintZLength; }
 
 private:
   G4VPhysicalVolume* ConstructVolumes();
@@ -59,6 +60,7 @@ private:
   G4double fPhoDetPitch;
   G4int fNumPhoDetsX;
   G4int fNumPhoDetsY;
+  G4double fScintZLength;
 
   G4String fCoatingType;
   DetectorMessenger* fMessenger;
